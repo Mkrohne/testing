@@ -19,13 +19,13 @@ while (true)
 
         case "2":
             Console.Clear();
-            menu.ListAllContacts();
+            await menu.ListAllContactsAsync();
             break;
 
 
         case "3":
             Console.Clear();
-            menu.ListSpecificContact();
+            await menu.ListSpecificContactAsync();
             break;
 
     }

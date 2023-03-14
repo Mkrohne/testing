@@ -21,26 +21,24 @@ namespace _01_SqlClient_Dapper.Services
             customer.PhoneNumber = Console.ReadLine() ?? "";
 
             Console.Write("Gatuadress: ");
-            customer.Address.StreetName = Console.ReadLine() ?? "";
+            customer.StreetName = Console.ReadLine() ?? "";
 
             Console.Write("Postnummer: ");
-            customer.Address.PostalCode = Console.ReadLine() ?? "";
+            customer.PostalCode = Console.ReadLine() ?? "";
 
             Console.Write("Stad: ");
-            customer.Address.City = Console.ReadLine() ?? "";
+            customer.City = Console.ReadLine() ?? "";
 
             //save customer to database
-            var customerService = new CustomerService();
-            await customerService.SaveAsync(customer);
+            await CustomerService.SaveAsync(customer);
         }
 
-        public void ListAllContacts()            
+        public async Task ListAllContactsAsync()            
         {
             //get all customers+addresses from database
-            var database = new DatabaseService();
-            var customers = database.GetCustomers();
-            
-            if(customers.Any())
+            var customers = await CustomerService.GetAllAsync();
+
+            if (customers.Any())
             {
                 foreach (Customer customer in customers)
                 {
@@ -48,7 +46,7 @@ namespace _01_SqlClient_Dapper.Services
                     Console.WriteLine($"Namn: {customer.FirstName} {customer.LastName}");
                     Console.WriteLine($"E-postadress: {customer.Email}");
                     Console.WriteLine($"Telefonnummer: {customer.PhoneNumber}");
-                    Console.WriteLine($"Adress: {customer.Address.StreetName}, {customer.Address.PostalCode}, {customer.Address.City}");
+                    Console.WriteLine($"Adress: {customer.StreetName}, {customer.PostalCode}, {customer.City}");
                     Console.WriteLine("");
 
                 }
@@ -60,17 +58,15 @@ namespace _01_SqlClient_Dapper.Services
             }
         }
 
-        public void ListSpecificContact()
-        {
-            //get specific customer+address from database
-            var database = new DatabaseService();
-
+        public async Task ListSpecificContactAsync()
+        {            
             Console.Write("Ange e-postadress på kunden: ");
             var email = Console.ReadLine();
 
             if (!string .IsNullOrEmpty(email))
             {
-                var customer = database.GetCustomer(email);
+                //get specific customer+address from database  
+                var customer = await CustomerService.GetAsync(email);
 
                 if (customer != null)
                 {
@@ -78,7 +74,7 @@ namespace _01_SqlClient_Dapper.Services
                     Console.WriteLine($"Namn: {customer.FirstName} {customer.LastName}");
                     Console.WriteLine($"E-postadress: {customer.Email}");
                     Console.WriteLine($"Telefonnummer: {customer.PhoneNumber}");
-                    Console.WriteLine($"Adress: {customer.Address.StreetName}, {customer.Address.PostalCode}, {customer.Address.City}");
+                    Console.WriteLine($"Adress: {customer.StreetName}, {customer.PostalCode}, {customer.City}");
                     Console.WriteLine("");
                 }
                 else
